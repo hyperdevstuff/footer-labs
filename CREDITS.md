@@ -49,3 +49,6 @@ they ship.*
 When an entry lands it records the site, the technique taken, and what we did
 with it. If your footer taught us something and is not on this list, that is a
 bug — please open an issue.
+
+Sites we are **studying** — not yet credited — live in
+[INSPIRATION.md](./INSPIRATION.md).

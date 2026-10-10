@@ -127,6 +127,9 @@ MIT covers **our code only**, and the README says so in plain words.
 
 If you are unsure whether a technique study is too close, it is too close.
 
+Sites under active study are listed in `INSPIRATION.md` — read it before
+starting a footer, and add to it when you find one worth studying.
+
 ---
 
 ## 6. Toolchain — and why each pin exists
