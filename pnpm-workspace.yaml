@@ -1,0 +1,9 @@
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm 10 blocks postinstall scripts by default. These three need them.
+onlyBuiltDependencies:
+  - "@swc/core"
+  - sharp
+  - esbuild

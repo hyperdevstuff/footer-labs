@@ -1,0 +1,28 @@
+# deps
+node_modules
+.pnpm-store
+
+# next
+.next
+out
+next-env.d.ts
+
+# build
+dist
+*.tsbuildinfo
+
+# env
+.env
+.env*.local
+
+# biome
+.cache
+
+# playwright (browser testing runs in CI, never locally)
+test-results
+playwright-report
+.playwright
+
+# os
+.DS_Store
+Thumbs.db

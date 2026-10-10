@@ -1,0 +1,14 @@
+{
+  "name": "footer-labs",
+  "features": {
+    "ghcr.io/devcontainers/features/node:2": {
+      "version": "22",
+      "pnpmVersion": "10.15.0"
+    }
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": ["README.md", "packages/registry/README.md"]
+    }
+  }
+}

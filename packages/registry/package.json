@@ -1,0 +1,28 @@
+{
+  "name": "@footer-labs/registry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The footer-labs registry. Ships as plain source — no build step.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts",
+    "./catalog": "./src/catalog.ts",
+    "./footers/*": "./src/footers/*.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "node scripts/build-registry.mjs",
+    "validate": "node scripts/build-registry.mjs --validate-only"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "react": "^19.2.0",
+    "typescript": "^5.7.0"
+  }
+}
