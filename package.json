@@ -9,8 +9,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --filter @footer-labs/site dev",
-    "build": "pnpm --filter @footer-labs/site build",
+    "dev": "pnpm registry:build && pnpm --filter @footer-labs/site dev",
+    "build": "pnpm registry:build && pnpm --filter @footer-labs/site build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "biome format --write .",
@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.30.0",
-    "@shadcn/lint": "^0.1.0",
+    "@shadcn/lint": "0.2.1",
     "@types/node": "^22.10.0",
     "@biomejs/biome": "^2.4.0",
     "eslint": "^9.30.0",

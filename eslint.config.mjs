@@ -3,12 +3,28 @@ import tseslint from "typescript-eslint";
 import reactHooks from "eslint-plugin-react-hooks";
 import { plugin as shadcn } from "@shadcn/lint";
 
-const REGISTRY_NOTE =
-  "Footer source is the wild — arbitrary values, custom utilities and bespoke colors are the craft. See CONTRIBUTING.md.";
-
-const SITE_NOTE =
-  "Gallery chrome follows the footer-labs design system. See CONTRIBUTING.md for approved exceptions.";
-
+/**
+ * SCOPE IS THE SAFETY MECHANISM, NOT POLISH.
+ *
+ * `@shadcn/lint` applies to apps/site ONLY. It is deliberately not configured
+ * for packages/registry, for concrete reasons:
+ *
+ *  1. `require-static-classes` structurally cannot fire there — it bails on
+ *     plain elements, and a footer is <footer>/<div>/<a>. Keeping it on was
+ *     dead config buying zero coverage.
+ *  2. `no-unknown-classes` has an untracked bug for `.tsx` files: it ignores
+ *     classes declared in a component's own embedded <style> block (its
+ *     SFC_RE only matches .svelte/.vue), so it flags legitimate local classes.
+ *  3. Every remaining rule (`no-arbitrary-values`, `no-raw-colors`,
+ *     `no-inline-styles`) flags the deliberate craft of a self-contained
+ *     footer. Those rules are semantically wrong here, not merely noisy.
+ *
+ * Registry integrity is enforced structurally by
+ * packages/registry/scripts/build-registry.ts instead — see CONTRIBUTING.md.
+ *
+ * @shadcn/lint is pre-1.0 and single-maintainer; patch releases have changed
+ * classification semantics. It is pinned exactly on purpose. Do not float it.
+ */
 export default tseslint.config(
   {
     ignores: [
@@ -34,59 +50,36 @@ export default tseslint.config(
   },
 
   /**
-   * apps/site — our own UI. The full design-system contract applies.
+   * apps/site — our own UI, and the exact use case this linter exists for.
+   * `warn` not `error` for no-unknown-classes: classes can legitimately come
+   * from a stylesheet the linter cannot see. Baseline before tightening.
    */
   {
     files: ["apps/site/**/*.{ts,tsx}"],
     plugins: { shadcn },
-    settings: { shadcn: { note: SITE_NOTE } },
+    settings: {
+      shadcn: {
+        note: "Gallery chrome follows the footer-labs design system. See CONTRIBUTING.md.",
+      },
+    },
     rules: {
       "shadcn/no-restyle": ["error", { allow: ["layout"] }],
       "shadcn/no-raw-colors": "error",
       "shadcn/no-arbitrary-values": "error",
-      "shadcn/no-unknown-classes": "error",
+      "shadcn/no-unknown-classes": "warn",
       "shadcn/require-static-classes": "error",
       "shadcn/no-inline-styles": "error",
     },
   },
 
   /**
-   * Approved exception: the live knobs set CSS custom properties.
-   * That is the sanctioned use of an inline style in this repo — it is how a
-   * draggable control writes a `--fl-*` variable. Everything else stays linted.
+   * Approved exception. The live knobs write `--fl-*` custom properties, which
+   * requires an inline style — it is the sanctioned use and the only one.
    */
   {
-    files: ["apps/site/components/knobs/**/*.{ts,tsx}"],
+    files: ["apps/site/src/components/knobs/**/*.{ts,tsx}"],
     rules: {
       "shadcn/no-inline-styles": "off",
-    },
-  },
-
-  /**
-   * packages/registry — the footers themselves.
-   *
-   * Every footer is a single self-contained file that must render correctly in
-   * a bare `create-next-app`. That requires arbitrary values, custom CSS
-   * utilities and hardcoded colors — exactly what these four rules forbid.
-   * They are therefore switched off here, ON PURPOSE, and the two rules that
-   * still protect the library's own integrity stay on:
-   *
-   *   no-unknown-classes     — catches typos and Tailwind v3 names that would
-   *                            silently render as nothing in a v4 project.
-   *   require-static-classes — catches `bg-${color}` template literals, which
-   *                            Tailwind's scanner cannot see.
-   */
-  {
-    files: ["packages/registry/**/*.{ts,tsx}"],
-    plugins: { shadcn },
-    settings: { shadcn: { note: REGISTRY_NOTE } },
-    rules: {
-      "shadcn/no-restyle": "off",
-      "shadcn/no-raw-colors": "off",
-      "shadcn/no-arbitrary-values": "off",
-      "shadcn/no-inline-styles": "off",
-      "shadcn/no-unknown-classes": "error",
-      "shadcn/require-static-classes": "error",
     },
   },
 );

@@ -80,6 +80,19 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* Display headings sit tighter than `leading-tight` (1.25) allows. */
+  --leading-display: 1.05;
+}
+
+/* Layout templates used by the footer detail page. Declared here rather than
+   written as arbitrary values inline, so the chrome has a real vocabulary. */
+@utility grid-meta {
+  grid-template-columns: 7rem 1fr;
+}
+
+@utility grid-split {
+  grid-template-columns: 1fr 20rem;
 }
 
 @layer base {
@@ -89,5 +102,21 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /*
+   * Site-level reduce-motion override. The gallery toggle sets this attribute
+   * so a visitor can force the static experience regardless of their OS
+   * setting — which doubles as a demo of every footer's reduced-motion
+   * fallback, something no other library in this space shows.
+   */
+  [data-reduce-motion="true"],
+  [data-reduce-motion="true"] *,
+  [data-reduce-motion="true"] *::before,
+  [data-reduce-motion="true"] *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

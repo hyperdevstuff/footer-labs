@@ -11,6 +11,12 @@ next-env.d.ts
 dist
 *.tsbuildinfo
 
+# generated from packages/registry metadata by scripts/build-registry.ts
+# `pnpm registry:build` recreates these; the registry's `pretypecheck` script
+# guarantees they exist before anything typechecks, so they are not committed.
+packages/registry/src/generated/
+apps/site/public/r/
+
 # env
 .env
 .env*.local
