@@ -44,7 +44,7 @@ export default function Home() {
 
         {FOOTERS.length === 0 ? (
           <section className="border-t border-border py-20">
-            <p className="text-sm font-medium tracking-tight">Nothing here yet.</p>
+            <p className="font-display text-sm font-medium tracking-tight">Nothing here yet.</p>
             <p className="mt-3 max-w-md text-pretty text-muted-foreground">
               Footers are added one at a time and deliberately curated. The first one is being
               finished now — it will be worth the wait.

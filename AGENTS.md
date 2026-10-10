@@ -120,8 +120,13 @@ MIT covers **our code only**, and the README says so in plain words.
   type scale. Never a design, a layout, or copy.
 - No third-party brand assets, logos, or real marketing copy, ever.
 - **Imagery never enters the MIT source tree.** Preview assets live in
-  `apps/site/public/`. Nothing over ~50KB gets committed; no video is committed;
-  fonts come from `next/font` / Google Fonts, never a committed `.woff2`.
+  `apps/site/public/`. Nothing over ~50KB gets committed; no video is committed.
+- **Fonts: footers never load one.** A footer uses the consumer's `font-sans` /
+  `font-mono`. Bundling a 52KB binary inside copy-paste code breaks the
+  self-contained promise and silently overrides a decision the consumer already
+  made. Typography is a site concern — see `TYPOGRAPHY.md` — plus a documented
+  type pairing on each footer page, never a bundled asset. The site itself may
+  self-host: Paper Mono is OFL, and its licence must stay beside the file.
 - `CREDITS.md` becomes a curated reading list of the footers that inspired us.
   Crediting costs nothing and sends readers to the people who did it first.
 

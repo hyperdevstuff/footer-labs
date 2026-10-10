@@ -33,6 +33,7 @@ export default tseslint.config(
       "**/dist/**",
       "**/out/**",
       "**/next-env.d.ts",
+      "**/src/generated/**",
       "pnpm-lock.yaml",
     ],
   },

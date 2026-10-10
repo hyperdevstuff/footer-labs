@@ -22,6 +22,7 @@ repo. Concretely:
 | `prefers-reduced-motion` degrades | Never breaks, never blanks. Say what happens in `meta.reducedMotion`. |
 | Copy is invented | No real brand names, no third-party marketing copy. |
 | Accessibility stated honestly | `meta.a11y` records known limits rather than claiming there are none. |
+| Never loads a font | Use the consumer's `font-sans` / `font-mono`. Bundling a font file inside pasted code breaks the self-contained promise. See `TYPOGRAPHY.md`. |
 
 ## Adding one
 

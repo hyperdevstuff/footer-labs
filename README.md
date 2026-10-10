@@ -88,6 +88,25 @@ focus rings, and a `prefers-reduced-motion` path that degrades to something
 complete rather than breaking. Where a footer has a known limitation, its page
 says so — we would rather you know than find out.
 
+## Typography
+
+footers-labs itself is set in [Inter](https://rsms.me/inter/) for body,
+[Geist](https://vercel.com/font) for display, and
+[Paper Mono](https://paper.design/mono) for mono — which is derived from Geist
+Mono, so the pairing is deliberate rather than assembled.
+
+**Footers never load a font.** They use your `font-sans` and `font-mono` from
+your Tailwind theme. Each footer page documents the type pairing it was
+designed around, so you can reproduce the intent with whatever you already use.
+See [TYPOGRAPHY.md](./TYPOGRAPHY.md).
+
+## Further reading
+
+- [INSPIRATION.md](./INSPIRATION.md) — the shortlist of footers we are studying
+- [CREDITS.md](./CREDITS.md) — techniques we took, and from where
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — the bar
+- [AGENTS.md](./AGENTS.md) — how this repository is structured, and why
+
 ## Contributing
 
 Footers are added **one at a time** and are deliberately curated. Please read

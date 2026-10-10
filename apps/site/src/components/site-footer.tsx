@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 /**
  * The gallery's own footer.
@@ -15,7 +15,7 @@ export function SiteFooter() {
     <footer className="border-t border-border">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-12 sm:px-8 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm font-medium tracking-tight">footer-labs</p>
+          <p className="font-display text-sm font-medium tracking-tight">footer-labs</p>
           <p className="mt-1 max-w-sm text-sm text-muted-foreground">
             A curated library of landing page footers. One self-contained file each — copy it and it
             works.

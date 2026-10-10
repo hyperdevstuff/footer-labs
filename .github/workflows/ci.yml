@@ -28,6 +28,10 @@ jobs:
       - name: Install
         run: pnpm install --frozen-lockfile
 
+      # Generates src/generated/* — must exist before anything reads it.
+      - name: Build registry
+        run: pnpm registry:build
+
       - name: Format check
         run: pnpm format:check
 
@@ -36,9 +40,6 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
-
-      - name: Build registry
-        run: pnpm registry:build
 
       - name: Validate registry
         run: pnpm registry:validate

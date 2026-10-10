@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 import { MotionToggle } from "@/components/motion-toggle";
 
@@ -8,7 +8,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-6 sm:px-8">
         <Link
           href="/"
-          className="text-sm font-medium tracking-tight focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          className="font-display text-sm font-medium tracking-tight focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           footer-labs
         </Link>
