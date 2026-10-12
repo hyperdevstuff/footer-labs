@@ -88,16 +88,105 @@
 
   /* Display headings sit tighter than `leading-tight` (1.25) allows. */
   --leading-display: 1.05;
+
+  /*
+   * Press feedback. One number, everywhere, so a button never disagrees with
+   * the popover next to it. Anything under 0.95 reads as exaggerated.
+   */
+  --scale-press: 0.96;
+
+  /* Showcase stage sizes. Named so pages stop inventing pixel values. */
+  --spacing-stage: 44rem;
+  --spacing-canvas: 36rem;
+  --spacing-code: 28rem;
+  --spacing-sheet: 70vh;
 }
 
-/* Layout templates used by the footer detail page. Declared here rather than
-   written as arbitrary values inline, so the chrome has a real vocabulary. */
+/* Layout templates, declared so the chrome has a real vocabulary instead of
+   a lattice of arbitrary values. */
 @utility grid-meta {
-  grid-template-columns: 7rem 1fr;
+  grid-template-columns: 7rem minmax(0, 1fr);
 }
 
-@utility grid-split {
-  grid-template-columns: 1fr 20rem;
+@utility grid-doc {
+  grid-template-columns: 16rem minmax(0, 1fr);
+}
+
+@utility grid-props {
+  grid-template-columns: 13rem minmax(0, 1fr);
+}
+
+/* Tier row on the landing page: tier name, what it needs, share. */
+@utility grid-tier {
+  grid-template-columns: 4.5rem minmax(0, 1fr) 3rem;
+}
+
+/*
+ * One-shot entrance, for the rare moments a view loads for the first time.
+ *
+ * Keyframes rather than transitions is the exception here, not the rule: a
+ * staged entrance plays once and has nothing to interrupt. Interactive state
+ * still uses transitions everywhere else.
+ */
+@keyframes fl-enter {
+  from {
+    opacity: 0;
+    filter: blur(4px);
+    translate: 0 12px;
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    translate: 0 0;
+  }
+}
+
+@utility enter {
+  animation: fl-enter 300ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/*
+ * Stagger steps, as classes rather than an inline custom property.
+ *
+ * Four named steps is the whole vocabulary. It is deliberately not a
+ * `[data-step]` attribute or a JS-computed delay: those are two more places
+ * for a number to drift, and the sequence is a fixed piece of choreography that
+ * changes when the layout changes, not per render.
+ */
+@utility enter-1 {
+  animation-delay: 0ms;
+}
+
+@utility enter-2 {
+  animation-delay: 100ms;
+}
+
+@utility enter-3 {
+  animation-delay: 200ms;
+}
+
+@utility enter-4 {
+  animation-delay: 300ms;
+}
+
+/*
+ * The OS preference, independent of the gallery's own toggle. Movement and
+ * blur are replaced by a plain cross-fade — the content still arrives, it just
+ * stops moving. Hidden state lives in the keyframe so nothing flashes.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: fl-fade 200ms ease both;
+  }
+}
+
+@keyframes fl-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @layer base {

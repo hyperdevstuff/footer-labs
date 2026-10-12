@@ -31,6 +31,14 @@ export type Credit =
   | { readonly original: true }
   | { readonly url: string; readonly technique: string; readonly note?: string };
 
+/** A prop a footer accepts, published so the gallery can document it. */
+export type FooterProp = {
+  readonly name: string;
+  readonly type: string;
+  readonly default?: string;
+  readonly description: string;
+};
+
 export type FooterMeta = {
   readonly category: Category;
   readonly tags: readonly string[];
@@ -39,6 +47,8 @@ export type FooterMeta = {
   readonly contributor: string;
   readonly dateAdded: string;
   readonly credit: Credit;
+  /** Props the footer accepts. Rendered on its page instead of a metadata dump. */
+  readonly props?: readonly FooterProp[];
   /** What `prefers-reduced-motion` does to this footer. */
   readonly reducedMotion: string;
   /** Honest statement of known accessibility limits. */
@@ -185,6 +195,28 @@ export function validateRegistryItem(item: unknown): string[] {
   }
 
   const deviations = meta.deviations;
+  const props = meta.props;
+
+  if (props !== undefined) {
+    if (!Array.isArray(props) || props.length === 0) {
+      at("meta.props", "must be a non-empty array when present");
+    } else {
+      for (const [index, prop] of props.entries()) {
+        const p = prop as Record<string, unknown>;
+        const where = `meta.props[${index}]`;
+        if (typeof p.name !== "string" || !/^[a-z][A-Za-z0-9]*$/.test(p.name)) {
+          at(`${where}.name`, `"${String(p.name)}" must be a camelCase prop name`);
+        }
+        if (typeof p.type !== "string" || p.type.length === 0) {
+          at(`${where}.type`, "is required");
+        }
+        if (typeof p.description !== "string" || p.description.length === 0) {
+          at(`${where}.description`, "is required");
+        }
+      }
+    }
+  }
+
   if (deviations !== undefined) {
     if (meta.status !== "experimental") {
       at(

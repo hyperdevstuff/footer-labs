@@ -20,6 +20,39 @@ export type FooterMetaEntry = {
   readonly meta: FooterMeta;
 };
 
-export const FOOTERS: readonly FooterMetaEntry[] = [];
+export const FOOTERS: readonly FooterMetaEntry[] = [
+  {
+    name: "quiet-minimal",
+    title: "Quiet Minimal",
+    description:
+      "The taste bar. No newsletter capture, no social row, no motion, no client JavaScript — just proportion, a hairline and restrained type.",
+    dependencies: [],
+    meta: {
+      category: "minimal",
+      tags: ["wordmark", "link-index", "hairline", "dark-first"],
+      tier: "css",
+      status: "stable",
+      contributor: "hyperdevstuff",
+      dateAdded: "2026-10-11",
+      credit: { original: true },
+      props: [
+        {
+          name: "hue",
+          type: "number",
+          default: "24",
+          description:
+            "Accent hue, 0–360. Writes the --fl-hue custom property the footer reads. The only knob.",
+        },
+        {
+          name: "className",
+          type: "string",
+          description: "Merged onto the <footer> element, after the footer's own classes.",
+        },
+      ],
+      reducedMotion: "Nothing animates. There is nothing to degrade.",
+      a11y: "Real <footer> and <nav> landmarks, labelled navigation, real links, visible focus rings with a background offset so they survive on the hairline borders.",
+    },
+  },
+] as const;
 
 export const FOOTER_NAMES = FOOTERS.map((footer) => footer.name);
