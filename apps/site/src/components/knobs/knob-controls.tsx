@@ -4,6 +4,14 @@ import type { ChangeEvent } from "react";
 
 import type { KnobDef } from "@footer-labs/registry";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 const fieldLabel = "block text-xs font-medium tracking-widest text-muted-foreground uppercase";
 const controlClass =
   "mt-2 w-full rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
@@ -17,9 +25,7 @@ type KnobControlsProps = {
 /**
  * Renders whatever the footer's knob metadata describes. This file knows
  * nothing about any specific footer — the metadata decides what is tunable.
- *
- * Hand-rolled native inputs on purpose: the site has no component primitives
- * and four controls do not justify adding Base UI, lucide and a cn() to it.
+ * Dropdowns are the shadcn Select; text, range and image stay native inputs.
  * Inline styles are approved for this directory (eslint override) — knobs
  * write `--fl-*` custom properties that no static class can express.
  */
@@ -50,20 +56,26 @@ function KnobField({
   switch (knob.kind) {
     case "select":
       return (
-        <label className="block">
+        <div>
           <span className={fieldLabel}>{knob.label}</span>
-          <select
-            className={controlClass}
-            value={typeof value === "string" ? value : knob.default}
-            onChange={(event) => onChange(event.target.value)}
-          >
-            {knob.options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </label>
+          <div className="mt-2">
+            <Select
+              value={typeof value === "string" ? value : knob.default}
+              onValueChange={onChange}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {knob.options.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
       );
 
     case "text":
