@@ -244,9 +244,9 @@ Hard requirement, not a nice-to-have:
 - Duplicated decorative markup (marquee tracks, repeated columns) is
   `aria-hidden` so assistive tech hears it once.
 - The reduced-motion fallback is the **OS setting only**. There is no site-level
-  override: a toggle that lies about the visitor's own preference, sitting in
-  the navbar of a library whose entire pitch is craft, costs more than the demo
-  is worth. Verify a footer's fallback by changing the OS setting.
+  override: a switch that contradicts what the visitor's own system says costs
+  more than the demo is worth. Verify a footer's fallback by changing the OS
+  setting.
 
 ---
 

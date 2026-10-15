@@ -1,12 +1,15 @@
 ﻿import Link from "next/link";
 
+import { ThemeToggle } from "@/components/theme-toggle";
+
 const NAV = [
   { href: "/blocks", label: "Blocks" },
   { href: "/credits", label: "Credits" },
 ] as const;
 
 /**
- * The site's own navigation, and the only header that carries the tagline.
+ * The site's own navigation, and the only header that carries the wordmark in
+ * a bar.
  *
  * It renders on the landing page and nowhere else. Every other route either has
  * a sidebar that already lists every footer (`/footers/[name]`), a navbar that
@@ -18,6 +21,12 @@ const NAV = [
  * Not sticky, for the same reason. The landing page's centrepiece is a pinned
  * horizontal shelf; a second pinned strip above it would have split the
  * viewport and made the shelf's own scroll hijack feel like a bug.
+ *
+ * No tagline. "Tasteful footers, because we care about the end" was a
+ * masthead line sitting between the wordmark and the nav, and it read as a
+ * second heading competing with the hero one screen below. It has not gone
+ * away — it is the document title, the meta description, and the argument the
+ * hero already makes in full sentences.
  */
 export function SiteHeader() {
   return (
@@ -29,9 +38,6 @@ export function SiteHeader() {
         >
           footer-labs
         </Link>
-        <span className="hidden text-sm text-muted-foreground sm:inline">
-          tasteful footers, because we care about the end
-        </span>
 
         <nav aria-label="Main" className="ml-auto flex items-center gap-1">
           {NAV.map((item) => (
@@ -43,6 +49,7 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          <ThemeToggle />
         </nav>
       </div>
     </header>

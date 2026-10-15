@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import { Search } from "lucide-react";
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/theme-toggle";
+
 /**
  * Library navbar.
  *
@@ -14,8 +16,9 @@ import Link from "next/link";
  *
  * This is the browse page's only bar, and it stays sticky because on a long
  * list the search field is the control you want to reach without scrolling back
- * to the top. It is not the site's header: no tagline claim, no marketing nav,
- * and no reduce-motion switch — see `site-header.tsx`.
+ * to the top. It is not the site's header — no tagline, no marketing nav — but
+ * it does carry the wordmark and the theme toggle, because a page you cannot
+ * get back to the front door from, or cannot read in light, is a dead end.
  *
  * The shortcut focuses the field rather than opening a palette. With a library
  * this size a palette is ceremony; a focused input with the list already
@@ -58,10 +61,6 @@ export function LibraryNavbar({
           </span>
         </Link>
 
-        <span className="hidden text-sm text-muted-foreground lg:inline">
-          tasteful footers, because we care about the end
-        </span>
-
         <nav aria-label="Main" className="ml-auto flex items-center gap-1">
           <Link
             href="/blocks"
@@ -76,6 +75,7 @@ export function LibraryNavbar({
           >
             Credits
           </Link>
+          <ThemeToggle />
         </nav>
 
         {/* Search, right. The only control that filters the whole library. */}
