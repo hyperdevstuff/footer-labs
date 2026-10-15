@@ -4,7 +4,6 @@ import { footers } from "@footer-labs/registry/catalog";
 import { SOURCES } from "@footer-labs/registry/sources";
 import { BlockSidebar } from "@/components/block-sidebar";
 import { Showcase, type BlockData } from "@/components/showcase/showcase";
-import { SiteHeader } from "@/components/site-header";
 
 export const dynamicParams = false;
 
@@ -42,13 +41,12 @@ export default async function FooterPage({ params }: { params: Promise<{ name: s
   };
 
   return (
-    <>
-      {/* Not sticky here — on a showcase page it eats the preview's vertical space. */}
-      <SiteHeader sticky={false} />
-      <div className="grid lg:grid-doc">
-        <BlockSidebar active={footer.name} />
-        <Showcase block={block} />
-      </div>
-    </>
+    /* No site header here: the sidebar is the navigation on this page, and it
+       already carries the wordmark home link and every other footer. A second
+       bar above the preview was spending the best screen on a navbar. */
+    <div className="grid lg:grid-doc">
+      <BlockSidebar active={footer.name} />
+      <Showcase block={block} />
+    </div>
   );
 }

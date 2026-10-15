@@ -243,8 +243,10 @@ Hard requirement, not a nice-to-have:
 - `prefers-reduced-motion` degrades to a static, complete, correct footer.
 - Duplicated decorative markup (marquee tracks, repeated columns) is
   `aria-hidden` so assistive tech hears it once.
-- The gallery has a site-level **reduce-motion toggle** that overrides the OS
-  setting. It doubles as a demo of the reduced-motion fallback.
+- The reduced-motion fallback is the **OS setting only**. There is no site-level
+  override: a toggle that lies about the visitor's own preference, sitting in
+  the navbar of a library whose entire pitch is craft, costs more than the demo
+  is worth. Verify a footer's fallback by changing the OS setting.
 
 ---
 

@@ -1,26 +1,27 @@
 ﻿import Link from "next/link";
 
-import { MotionToggle } from "@/components/motion-toggle";
-import { cn } from "@/lib/utils";
-
 const NAV = [
   { href: "/blocks", label: "Blocks" },
   { href: "/credits", label: "Credits" },
 ] as const;
 
 /**
- * `sticky` is off on showcase pages — pinned chrome competes with the preview
- * for vertical space, and a footer library should not spend its best screen on
- * a navbar.
+ * The site's own navigation, and the only header that carries the tagline.
+ *
+ * It renders on the landing page and nowhere else. Every other route either has
+ * a sidebar that already lists every footer (`/footers/[name]`), a navbar that
+ * already owns the search field (`/blocks`), or a back link to the front door
+ * (`/credits`, `/preview/[name]`) — so a second bar pinned to the top of those
+ * pages was pure chrome, competing for the vertical space the actual content
+ * needed.
+ *
+ * Not sticky, for the same reason. The landing page's centrepiece is a pinned
+ * horizontal shelf; a second pinned strip above it would have split the
+ * viewport and made the shelf's own scroll hijack feel like a bug.
  */
-export function SiteHeader({ sticky = true }: { sticky?: boolean }) {
+export function SiteHeader() {
   return (
-    <header
-      className={cn(
-        "z-20 border-b border-border bg-background/80 backdrop-blur",
-        sticky && "sticky top-0",
-      )}
-    >
+    <header className="border-b border-border">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-6 sm:px-8">
         <Link
           href="/"
@@ -42,7 +43,6 @@ export function SiteHeader({ sticky = true }: { sticky?: boolean }) {
               {item.label}
             </Link>
           ))}
-          <MotionToggle />
         </nav>
       </div>
     </header>
