@@ -121,6 +121,85 @@
   grid-template-columns: 4.5rem minmax(0, 1fr) 3rem;
 }
 
+/* Category row on the landing page: index, name and blurb, count. */
+@utility grid-category {
+  grid-template-columns: 2.5rem minmax(0, 1fr) 3rem;
+}
+
+/* Browse index: sidebar, then content. */
+@utility grid-library {
+  grid-template-columns: 17rem minmax(0, 1fr);
+}
+
+/*
+ * The mark.
+ *
+ * A hairline square with the accent rule across its foot — the footer's own
+ * top-edge ornament reduced to a glyph. Declared as a utility rather than an
+ * inline `box-shadow` so the navbar and the sidebar render the same mark from
+ * one definition.
+ */
+@utility fl-mark {
+  box-shadow: inset 0 -7px 0 -6px oklch(0.72 0.16 265);
+}
+
+/*
+ * The shelf's geometry.
+ *
+ * The slot size and the two row heights are measured from the viewport at
+ * runtime, so they are custom properties written by the shelf and read here.
+ * Writing them from an effect rather than a JSX `style` prop keeps the layout
+ * in the stylesheet, where it can be read, and keeps `no-inline-styles`
+ * meaningful everywhere else.
+ */
+@layer components {
+  .fl-shelf {
+    height: calc(100svh + var(--fl-runway, 0px));
+  }
+
+  .fl-shelf-grid {
+    grid-template-columns: repeat(6, var(--fl-slot, 20rem));
+    grid-template-rows: var(--fl-row-a, 12rem) var(--fl-row-b, 11rem);
+    grid-auto-rows: var(--fl-row-b, 11rem);
+  }
+
+  .fl-shelf-track {
+    transform: translate3d(calc(var(--fl-x, 0) * -1px), 0, 0);
+  }
+
+  .fl-shelf-bar {
+    transform: scaleX(var(--fl-p, 0));
+  }
+
+  /* Reduced-motion fallback: the reader drives the strip themselves. */
+  .fl-shelf-scroll {
+    scroll-snap-type: x mandatory;
+  }
+
+  .fl-shelf-snap > *,
+  .fl-shelf-card {
+    scroll-snap-align: start;
+  }
+
+  /*
+   * The footer thumbnail.
+   *
+   * The inner box is laid out at the width the footer was designed for, then
+   * scaled down to fit whatever slot it lands in. Only the measured scale is a
+   * custom property, written by `FooterThumb` from a ResizeObserver.
+   */
+  .fl-thumb-inner {
+    width: 1152px;
+    transform: scale(var(--fl-scale, 1));
+    transform-origin: top left;
+  }
+}
+
+/** The slot the thumbnail is fitted into. Clips the scaled overflow. */
+@utility fl-thumb {
+  overflow: hidden;
+}
+
 /*
  * One-shot entrance, for the rare moments a view loads for the first time.
  *
@@ -170,9 +249,9 @@
 }
 
 /*
- * The OS preference, independent of the gallery's own toggle. Movement and
- * blur are replaced by a plain cross-fade — the content still arrives, it just
- * stops moving. Hidden state lives in the keyframe so nothing flashes.
+ * The OS preference. Movement and blur are replaced by a plain cross-fade — the
+ * content still arrives, it just stops moving. Hidden state lives in the keyframe
+ * so nothing flashes.
  */
 @media (prefers-reduced-motion: reduce) {
   .enter {
@@ -196,21 +275,5 @@
 
   body {
     @apply bg-background text-foreground;
-  }
-
-  /*
-   * Site-level reduce-motion override. The gallery toggle sets this attribute
-   * so a visitor can force the static experience regardless of their OS
-   * setting — which doubles as a demo of every footer's reduced-motion
-   * fallback, something no other library in this space shows.
-   */
-  [data-reduce-motion="true"],
-  [data-reduce-motion="true"] *,
-  [data-reduce-motion="true"] *::before,
-  [data-reduce-motion="true"] *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    scroll-behavior: auto !important;
   }
 }

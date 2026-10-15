@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 import { DemoContext } from "@/components/showcase/demo-context";
 import { footers } from "@footer-labs/registry/catalog";
@@ -43,7 +44,8 @@ export default async function PreviewPage({ params }: { params: Promise<{ name: 
         href={`/footers/${footer.name}`}
         className="fixed top-4 left-4 z-50 inline-flex h-9 items-center gap-2 rounded-full border border-border bg-background/90 px-4 text-sm backdrop-blur transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       >
-        ← {footer.title}
+        <ArrowLeft aria-hidden className="size-4" />
+        {footer.title}
       </Link>
 
       <DemoContext>

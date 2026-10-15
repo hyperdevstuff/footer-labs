@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { Check, ChevronDown, Copy, Sparkles } from "lucide-react";
+import { ArrowUpRight, Check, ChevronDown, Copy, Sparkles } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 
 /**
@@ -84,9 +84,7 @@ export function OpenInMenu({
               className="flex h-8 items-center justify-between rounded-sm px-2.5 text-xs transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none"
             >
               {target.label}
-              <span aria-hidden className="opacity-50">
-                ↗
-              </span>
+              <ArrowUpRight aria-hidden className="size-3 opacity-50" />
             </a>
           ))}
 

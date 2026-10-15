@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 
+import { LibraryView, type SidebarCategory, type SidebarFooter } from "@/components/library-view";
 import { FOOTERS } from "@footer-labs/registry";
-import { Browse, type BrowseFooter } from "@/components/browse/browse";
-import { SiteHeader } from "@/components/site-header";
+import { CATEGORIES } from "@footer-labs/registry/schema";
 
 export const metadata: Metadata = {
   title: "Footers — footer-labs",
@@ -11,47 +10,48 @@ export const metadata: Metadata = {
     "Browse every footer in the library by category and dependency tier. One self-contained file each.",
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  minimal: "Minimal",
+  editorial: "Editorial",
+  kinetic: "Kinetic",
+  generative: "Generative",
+  photographic: "Photographic",
+  terminal: "Terminal",
+  data: "Data",
+  isometric: "Isometric",
+};
+
+/**
+ * Browse index.
+ *
+ * Categories are collapsible groups in the sidebar and footers are direct links
+ * inside them, so every footer is one click away. The earlier version made
+ * Category/Tier/Status facet filters the primary verb, which meant picking a
+ * filter first and then finding the footer — two decisions where one would do,
+ * and a page that could not be read as a list of what the library contains.
+ *
+ * Search lives in the navbar with ⌘K because it filters the whole library, not
+ * the sidebar's column. It arrives here as a prop.
+ *
+ * Every declared category is listed even when it is empty, with a real count.
+ * The structure is the roadmap: a visitor can see that `isometric` exists and
+ * that nothing is in it yet, which is more honest than a sidebar that silently
+ * re-lays-out every time a footer is added.
+ */
 export default function BlocksPage() {
-  /*
-   * Only the fields the grid draws. The `Component` from the catalog is a
-   * function and cannot cross the server/client boundary — and the browse page
-   * does not want it anyway, because a live preview belongs on the showcase.
-   */
-  const footers: readonly BrowseFooter[] = FOOTERS.map((footer) => ({
+  const categories: readonly SidebarCategory[] = CATEGORIES.map((id) => ({
+    id,
+    label: CATEGORY_LABELS[id] ?? id,
+  }));
+
+  const footers: readonly SidebarFooter[] = FOOTERS.map((footer) => ({
     name: footer.name,
     title: footer.title,
     description: footer.description,
-    dependencies: footer.dependencies,
     category: footer.meta.category,
     tier: footer.meta.tier,
-    status: footer.meta.status,
+    experimental: footer.meta.status === "experimental",
   }));
 
-  return (
-    <>
-      <SiteHeader />
-      {/* `useSearchParams` opts a subtree out of prerendering, so the shell has
-          to be able to render before the query string is known. */}
-      <Suspense fallback={<BrowseShell footers={footers} />}>
-        <Browse footers={footers} />
-      </Suspense>
-    </>
-  );
-}
-
-/** Same layout, no filters applied. Only ever seen for a frame or two. */
-function BrowseShell({ footers }: { footers: readonly BrowseFooter[] }) {
-  return (
-    <div className="grid lg:grid-doc">
-      <div aria-hidden className="hidden lg:block lg:border-r lg:border-border" />
-      <div className="px-6 py-10 sm:px-10">
-        <div className="max-w-3xl">
-          <h1 className="font-display text-3xl tracking-tight">Footers</h1>
-          <p className="mt-3 font-mono text-xs text-muted-foreground tabular-nums">
-            {footers.length} blocks
-          </p>
-        </div>
-      </div>
-    </div>
-  );
+  return <LibraryView categories={categories} footers={footers} />;
 }

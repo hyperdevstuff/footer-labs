@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 const ENTRIES = [
   {
@@ -23,9 +24,10 @@ export default function CreditsPage() {
     <main className="mx-auto w-full max-w-2xl px-6 py-20 sm:px-8">
       <Link
         href="/"
-        className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       >
-        ← footer-labs
+        <ArrowLeft aria-hidden className="size-3.5" />
+        footer-labs
       </Link>
 
       <h1 className="mt-8 text-3xl tracking-tight sm:text-4xl">Credits</h1>

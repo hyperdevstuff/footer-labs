@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Monitor, RotateCcw, Smartphone, Tablet } from "lucide-react";
+import { Code2, Maximize2, Monitor, RotateCcw, Smartphone, Tablet } from "lucide-react";
 
 import { CodePanel } from "./code-panel";
 import { DemoContext } from "./demo-context";
@@ -94,7 +94,7 @@ export function Showcase({ block }: { block: BlockData }) {
                 <RotateCcw aria-hidden className="size-3.5" />
               </button>
 
-              <div className="ml-auto">
+              <div className="ml-auto flex items-center gap-2">
                 <OpenInMenu
                   targets={[
                     {
@@ -112,6 +112,28 @@ export function Showcase({ block }: { block: BlockData }) {
                   ]}
                   prompt={prompt}
                 />
+
+                {/* Fullscreen and source both act on the preview, so they live on
+                    the preview's own toolbar. They were down in the caption row
+                    below, which read as a footnote and got skipped. */}
+                <a
+                  href={`/preview/${block.name}`}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                >
+                  <Maximize2 aria-hidden className="size-3.5" />
+                  Fullscreen
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setShowCode((v) => !v)}
+                  aria-expanded={showCode}
+                  aria-controls="fl-source"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                >
+                  <Code2 aria-hidden className="size-3.5" />
+                  {showCode ? "Hide source" : "View source"}
+                </button>
               </div>
             </div>
 
@@ -125,27 +147,11 @@ export function Showcase({ block }: { block: BlockData }) {
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-3">
-            <a
-              href={`/preview/${block.name}`}
-              className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-            >
-              Fullscreen ↗
-            </a>
-            <button
-              type="button"
-              onClick={() => setShowCode((v) => !v)}
-              className="text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-            >
-              {showCode ? "Hide source" : "View source"}
-            </button>
+          {/* Kept mounted and hidden rather than unmounted, so toggling source
+              does not throw away the scroll position inside the panel. */}
+          <div id="fl-source" hidden={!showCode} className="mt-4">
+            <CodePanel source={block.source} />
           </div>
-
-          {showCode ? (
-            <div className="mt-4">
-              <CodePanel source={block.source} />
-            </div>
-          ) : null}
         </div>
 
         {/* 3 · Install */}
