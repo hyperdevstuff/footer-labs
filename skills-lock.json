@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "regards-art-direction": {
+      "source": "filipwojda/regards-skill",
+      "sourceType": "github",
+      "skillPath": "skills/regards-art-direction/SKILL.md",
+      "computedHash": "20ef5d5f3193ceb90be083a0dd44ad82a0fc309b0c4fa59a66c4cd3a08d59383"
+    }
+  }
+}

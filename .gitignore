@@ -32,3 +32,4 @@ playwright-report
 # os
 .DS_Store
 Thumbs.db
+.commandcode
