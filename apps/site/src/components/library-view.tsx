@@ -51,7 +51,13 @@ export function LibraryView({
 
       <div className="mx-auto grid w-full max-w-400 gap-px px-6 py-8 sm:px-8 lg:grid-library lg:gap-8 lg:py-10">
         <div className="lg:border-r lg:border-border lg:pr-6">
-          <LibrarySidebar categories={categories} footers={footers} query={query} />
+          {/* No wordmark here: this page's navbar already carries one. */}
+          <LibrarySidebar
+            categories={categories}
+            footers={footers}
+            query={query}
+            showWordmark={false}
+          />
         </div>
 
         <div className="min-w-0">

@@ -76,11 +76,22 @@ export function LibrarySidebar({
   footers,
   active,
   query,
+  showWordmark = true,
 }: {
   categories: readonly SidebarCategory[];
   footers: readonly SidebarFooter[];
   active?: string;
   query: string;
+  /**
+   * Whether to render the wordmark at the top.
+   *
+   * The showcase page (`/footers/[name]`) has no navbar, so the sidebar's
+   * wordmark is the only way home and it must stay. The browse page
+   * (`/blocks`) has a navbar that already carries it, and rendering both puts
+   * the same two words on screen forty pixels apart — which reads as a
+   * rendering bug, not as navigation.
+   */
+  showWordmark?: boolean;
 }) {
   // Populated groups open by default. `undefined` means "not yet touched",
   // which is what lets a category added later arrive open rather than closed.
@@ -103,23 +114,30 @@ export function LibrarySidebar({
   return (
     <div className="flex h-full flex-col">
       {/* The wordmark. The mark is the footer's own top-edge ornament reduced
-          to a glyph — a hairline square with the accent rule across its foot. */}
-      <div className="shrink-0 pb-4">
-        <Link
-          href="/"
-          className="flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-        >
-          <span
-            aria-hidden
-            className="fl-mark h-6 w-6 shrink-0 rounded-md border border-border bg-foreground"
-          />
-          <span className="font-display text-base leading-none font-medium tracking-tight">
-            footer-labs
-          </span>
-        </Link>
-      </div>
+          to a glyph — a hairline square with the accent rule across its foot.
+          Hidden on /blocks, where the navbar already shows it — and so is the
+          rule under it, which would otherwise stack a second hairline directly
+          on top of the navbar's own border-b. */}
+      {showWordmark ? (
+        <>
+          <div className="shrink-0 pb-4">
+            <Link
+              href="/"
+              className="flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              <span
+                aria-hidden
+                className="fl-mark h-6 w-6 shrink-0 rounded-md border border-border bg-foreground"
+              />
+              <span className="font-display text-base leading-none font-medium tracking-tight">
+                footer-labs
+              </span>
+            </Link>
+          </div>
 
-      <div className="shrink-0 border-t border-border" />
+          <div className="shrink-0 border-t border-border" />
+        </>
+      ) : null}
 
       <nav aria-label="Footers" className="mt-3 flex-1 overflow-y-auto pr-1">
         {grouped.length === 0 ? (

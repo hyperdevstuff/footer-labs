@@ -27,11 +27,16 @@ const NAV = [
  * second heading competing with the hero one screen below. It has not gone
  * away — it is the document title, the meta description, and the argument the
  * hero already makes in full sentences.
+ *
+ * `max-w-400`, the same measure as every section on the page. The bar was
+ * `max-w-6xl`, which is 28rem narrower — not enough to look broken, just
+ * enough that the wordmark never lined up with the hero text under it, and the
+ * eye reads that as "off centre" before it can say why.
  */
 export function SiteHeader() {
   return (
     <header className="border-b border-border">
-      <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-4 px-6 sm:px-8">
+      <div className="mx-auto flex h-14 w-full max-w-400 items-center gap-4 px-6 sm:px-8">
         <Link
           href="/"
           className="font-display text-sm font-medium tracking-tight focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
