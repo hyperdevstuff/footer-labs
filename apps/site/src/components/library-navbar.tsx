@@ -66,22 +66,13 @@ export function LibraryNavbar({
           </span>
         </Link>
 
-        <nav aria-label="Main" className="ml-auto flex items-center gap-1">
-          <Link
-            href="/blocks"
-            aria-current="page"
-            className="rounded-md px-2.5 py-1.5 text-sm text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            Blocks
-          </Link>
-          <Link
-            href="/credits"
-            className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors duration-150 hover:bg-secondary/60 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-          >
-            Credits
-          </Link>
+        {/* No nav links here. "Blocks" was a link to the page you are already
+            on, and "Credits" belongs to the footer, not the chrome — the
+            browse sidebar carries it instead. What is left is the wordmark, a
+            theme toggle and the search field, which is what this bar is for. */}
+        <div className="ml-auto flex items-center gap-1">
           <ThemeToggle />
-        </nav>
+        </div>
 
         {/* Search, right. The only control that filters the whole library. */}
         <div className="relative w-full max-w-xs">

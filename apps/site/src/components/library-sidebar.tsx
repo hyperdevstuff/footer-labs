@@ -171,6 +171,16 @@ export function LibrarySidebar({
           {total} {total === 1 ? "footer" : "footers"}
           {query ? " matching" : ""}
         </p>
+
+        {/* Credits lives in the footer of the site, not in its navbar. This is
+            where the browse page keeps a route to it, so removing the link
+            from the chrome above did not strand the page. */}
+        <Link
+          href="/credits"
+          className="mt-2 block rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors duration-150 hover:bg-secondary/50 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          Credits
+        </Link>
       </div>
     </div>
   );
