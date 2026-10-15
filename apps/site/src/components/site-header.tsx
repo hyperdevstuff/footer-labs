@@ -15,9 +15,15 @@ export function SiteHeader() {
         <span className="hidden text-sm text-muted-foreground sm:inline">
           tasteful footers, because we care about the end
         </span>
-        <div className="ml-auto">
+        <nav aria-label="Site" className="ml-auto flex items-center gap-5">
+          <Link
+            href="/create"
+            className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+          >
+            Create
+          </Link>
           <MotionToggle />
-        </div>
+        </nav>
       </div>
     </header>
   );
