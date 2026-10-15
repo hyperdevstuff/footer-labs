@@ -1,7 +1,15 @@
 ﻿"use client";
 
-import { useState } from "react";
-import { Code2, Maximize2, Monitor, RotateCcw, Smartphone, Tablet } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  ChevronDown,
+  Code2,
+  Maximize2,
+  Monitor,
+  RotateCcw,
+  Smartphone,
+  Tablet,
+} from "lucide-react";
 
 import { CodePanel } from "./code-panel";
 import { DemoContext } from "./demo-context";
@@ -46,6 +54,32 @@ export function Showcase({ block }: { block: BlockData }) {
   const [viewport, setViewport] = useState<ViewportId>("desktop");
   const [restartKey, setRestartKey] = useState(0);
   const [showCode, setShowCode] = useState(false);
+  const sourcePanel = useRef<HTMLDivElement>(null);
+
+  /**
+   * Take the reader to the panel they just opened.
+   *
+   * The source renders below the preview, which is the right place for it and
+   * a terrible place to discover: the button says "View source", the panel
+   * appears off-screen, and nothing on the page acknowledges that anything
+   * happened. The chevron on the button says which way it goes; this makes
+   * good on it.
+   *
+   * Only on open. Closing leaves the reader where they are, which is where
+   * they were already looking.
+   *
+   * `block: "start"` rather than `"nearest"` because the panel is taller than
+   * the space below it — the nearest edge would leave the filename header, the
+   * only thing identifying the panel, scrolled off the top.
+   */
+  useEffect(() => {
+    if (!showCode) return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    sourcePanel.current?.scrollIntoView({
+      behavior: reduced ? "auto" : "smooth",
+      block: "start",
+    });
+  }, [showCode]);
 
   const width = VIEWPORTS.find((v) => v.id === viewport)?.width ?? "max-w-6xl";
   const prompt = buildPrompt(block);
@@ -148,6 +182,15 @@ export function Showcase({ block }: { block: BlockData }) {
               >
                 <Code2 aria-hidden className="size-3.5" />
                 {showCode ? "Hide source" : "View source"}
+                {/* Points the way the panel goes. The chevron flipping is most
+                    of the affordance — a label that changes on its own says
+                    "something is now open", not "look down here". */}
+                <ChevronDown
+                  aria-hidden
+                  className={`size-3.5 transition-transform duration-200 ease-out motion-reduce:transition-none ${
+                    showCode ? "rotate-180" : ""
+                  }`}
+                />
               </button>
             </div>
           </div>
@@ -164,7 +207,7 @@ export function Showcase({ block }: { block: BlockData }) {
 
         {/* Kept mounted and hidden rather than unmounted, so toggling source
               does not throw away the scroll position inside the panel. */}
-        <div id="fl-source" hidden={!showCode} className="mt-4">
+        <div id="fl-source" ref={sourcePanel} hidden={!showCode} className="mt-4 scroll-mt-6">
           <CodePanel source={block.source} />
         </div>
       </div>
