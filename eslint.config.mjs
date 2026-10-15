@@ -83,4 +83,17 @@ export default tseslint.config(
       "shadcn/no-inline-styles": "off",
     },
   },
+
+  /**
+   * Approved exception. `components/ui` holds shadcn primitives vendored
+   * verbatim via the CLI — they are upstream code, not authored chrome, and
+   * hand-editing them to satisfy no-arbitrary-values would drift them from
+   * the registry they come from.
+   */
+  {
+    files: ["apps/site/src/components/ui/**/*.{ts,tsx}"],
+    rules: {
+      "shadcn/no-arbitrary-values": "off",
+    },
+  },
 );

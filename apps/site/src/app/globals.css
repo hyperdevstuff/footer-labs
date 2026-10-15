@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 /*
  * CRITICAL. Tailwind v4 auto-detects sources from the app directory only.
@@ -128,9 +129,9 @@
   grid-template-columns: 1fr 20rem;
 }
 
-/* The /create studio: preview fills, controls sit in a narrow sidebar. */
+/* The /create studio: controls in a narrow left sidebar, preview fills. */
 @utility grid-studio {
-  grid-template-columns: 1fr 18rem;
+  grid-template-columns: 18rem 1fr;
 }
 
 @layer base {
