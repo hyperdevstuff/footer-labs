@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="200" viewBox="0 0 320 200">
+  <rect width="320" height="200" fill="oklch(0.3 0.08 265)"/>
+  <g fill="none" stroke="oklch(0.7 0.12 265)" stroke-width="1.5">
+    <path d="M-20 40 C 60 10, 120 70, 200 40 S 340 20, 360 50"/>
+    <path d="M-20 80 C 60 50, 120 110, 200 80 S 340 60, 360 90"/>
+    <path d="M-20 120 C 60 90, 120 150, 200 120 S 340 100, 360 130"/>
+    <path d="M-20 160 C 60 130, 120 190, 200 160 S 340 140, 360 170"/>
+  </g>
+</svg>
