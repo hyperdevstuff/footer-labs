@@ -59,101 +59,119 @@ export function Showcase({ block }: { block: BlockData }) {
           <span className="font-mono text-xs text-muted-foreground">{block.name}</span>
         </div>
         <p className="mt-3 text-pretty text-muted-foreground">{block.description}</p>
+      </div>
 
-        {/* 2 · Preview */}
-        <div className="mt-8">
-          <div className="overflow-hidden rounded-xl border border-border">
-            <div className="flex items-center gap-1 border-b border-border bg-muted px-2 py-1.5">
-              {VIEWPORTS.map((v) => {
-                const Icon = v.icon;
-                const active = v.id === viewport;
-                return (
-                  <button
-                    key={v.id}
-                    type="button"
-                    onClick={() => setViewport(v.id)}
-                    title={v.label}
-                    aria-pressed={active}
-                    className={`flex size-7 items-center justify-center rounded-md transition-colors ${
-                      active
-                        ? "bg-background text-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    <Icon aria-hidden className="size-3.5" />
-                  </button>
-                );
-              })}
+      {/*
+       * 2 · Preview — full width, deliberately outside the measure above.
+       *
+       * The stage is the only element on this page that is allowed to be as
+       * wide as the column it sits in. A desktop footer is 1152px wide; shown
+       * inside a 768px text column it silently re-flows, and a "desktop"
+       * preview that is not desktop is worse than no preview at all. The prose
+       * keeps its measure because prose needs one; a canvas does not.
+       *
+       * Only the inner frame changes width when the viewport toggle moves.
+       * The frame, the toolbar and the canvas around it stay exactly where
+       * they are, so switching device re-lays-out the footer and nothing
+       * else — the page does not jump, and the toolbar never reflows its
+       * own buttons.
+       */}
+      <div className="mt-8">
+        <div className="overflow-hidden rounded-xl border border-border">
+          <div className="flex items-center gap-1 border-b border-border bg-muted px-2 py-1.5">
+            {VIEWPORTS.map((v) => {
+              const Icon = v.icon;
+              const active = v.id === viewport;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  onClick={() => setViewport(v.id)}
+                  title={v.label}
+                  aria-pressed={active}
+                  className={`flex size-7 items-center justify-center rounded-md transition-colors ${
+                    active
+                      ? "bg-background text-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Icon aria-hidden className="size-3.5" />
+                </button>
+              );
+            })}
+
+            <button
+              type="button"
+              onClick={() => setRestartKey((k) => k + 1)}
+              title="Restart preview"
+              className="ml-1 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+            >
+              <RotateCcw aria-hidden className="size-3.5" />
+            </button>
+
+            <div className="ml-auto flex items-center gap-2">
+              <OpenInMenu
+                targets={[
+                  {
+                    label: "ChatGPT",
+                    href: `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`,
+                  },
+                  {
+                    label: "Claude",
+                    href: `https://claude.ai/new?q=${encodeURIComponent(prompt)}`,
+                  },
+                  {
+                    label: "v0",
+                    href: `https://v0.dev/chat?q=${encodeURIComponent(prompt)}`,
+                  },
+                ]}
+                prompt={prompt}
+              />
+
+              {/* Fullscreen and source both act on the preview, so they live on
+                    the preview's own toolbar. They were down in the caption row
+                    below, which read as a footnote and got skipped. */}
+              <a
+                href={`/preview/${block.name}`}
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              >
+                <Maximize2 aria-hidden className="size-3.5" />
+                Fullscreen
+              </a>
 
               <button
                 type="button"
-                onClick={() => setRestartKey((k) => k + 1)}
-                title="Restart preview"
-                className="ml-1 flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-background hover:text-foreground"
+                onClick={() => setShowCode((v) => !v)}
+                aria-expanded={showCode}
+                aria-controls="fl-source"
+                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
-                <RotateCcw aria-hidden className="size-3.5" />
+                <Code2 aria-hidden className="size-3.5" />
+                {showCode ? "Hide source" : "View source"}
               </button>
-
-              <div className="ml-auto flex items-center gap-2">
-                <OpenInMenu
-                  targets={[
-                    {
-                      label: "ChatGPT",
-                      href: `https://chatgpt.com/?q=${encodeURIComponent(prompt)}`,
-                    },
-                    {
-                      label: "Claude",
-                      href: `https://claude.ai/new?q=${encodeURIComponent(prompt)}`,
-                    },
-                    {
-                      label: "v0",
-                      href: `https://v0.dev/chat?q=${encodeURIComponent(prompt)}`,
-                    },
-                  ]}
-                  prompt={prompt}
-                />
-
-                {/* Fullscreen and source both act on the preview, so they live on
-                    the preview's own toolbar. They were down in the caption row
-                    below, which read as a footnote and got skipped. */}
-                <a
-                  href={`/preview/${block.name}`}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                >
-                  <Maximize2 aria-hidden className="size-3.5" />
-                  Fullscreen
-                </a>
-
-                <button
-                  type="button"
-                  onClick={() => setShowCode((v) => !v)}
-                  aria-expanded={showCode}
-                  aria-controls="fl-source"
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                >
-                  <Code2 aria-hidden className="size-3.5" />
-                  {showCode ? "Hide source" : "View source"}
-                </button>
-              </div>
-            </div>
-
-            <div className="flex min-h-canvas justify-center overflow-hidden bg-muted/30 p-4">
-              <div
-                key={`${block.name}-${restartKey}`}
-                className={`w-full overflow-hidden rounded-lg border border-border shadow-sm ${width}`}
-              >
-                <DemoContext>{block.footer}</DemoContext>
-              </div>
             </div>
           </div>
 
-          {/* Kept mounted and hidden rather than unmounted, so toggling source
-              does not throw away the scroll position inside the panel. */}
-          <div id="fl-source" hidden={!showCode} className="mt-4">
-            <CodePanel source={block.source} />
+          <div className="flex min-h-canvas justify-center overflow-hidden bg-muted/30 p-4">
+            <div
+              key={`${block.name}-${restartKey}`}
+              className={`w-full overflow-hidden rounded-lg border border-border shadow-sm ${width}`}
+            >
+              <DemoContext>{block.footer}</DemoContext>
+            </div>
           </div>
         </div>
 
+        {/* Kept mounted and hidden rather than unmounted, so toggling source
+              does not throw away the scroll position inside the panel. */}
+        <div id="fl-source" hidden={!showCode} className="mt-4">
+          <CodePanel source={block.source} />
+        </div>
+      </div>
+
+      {/* Prose again, at the measure it had before the preview borrowed the
+          full width. Install and props are text, and text wants a column. */}
+      <div className="max-w-3xl">
         {/* 3 · Install */}
         <div className="mt-12">
           <div className="flex items-center justify-between gap-3">
