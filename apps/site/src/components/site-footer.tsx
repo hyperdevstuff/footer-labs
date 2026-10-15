@@ -9,11 +9,11 @@ import { ArrowRight } from "lucide-react";
  * viewed footer on the site would have been advertising itself, and the library
  * would be selling its own chrome.
  *
- * So it plays the part and then says so. The headline is the pitch a library
- * footer would make — you already know which footer you want — and the sentence
- * under it is the honest one: this is the site's, not the library's, and the
- * library is one click away. The trap is sprung honestly, which is the only way
- * it is funny.
+ * So it says the thing out loud. The headline is the pitch a library footer
+ * would make — you already know which footer you want — and the sentence under
+ * it is the honest one: this is the site's, not the library's. The trap is
+ * sprung with the disclosure still in it, which is the only version of the joke
+ * that is actually funny.
  */
 export function SiteFooter() {
   return (
@@ -24,9 +24,13 @@ export function SiteFooter() {
         </p>
 
         <p className="mt-5 max-w-xl text-pretty text-muted-foreground">
-          You want this one — the columns, the hairline, the links that don&rsquo;t shout. It
-          isn&rsquo;t in the library, because a library that sells its own footer is just a website
-          with a download button. These are.
+          It is the footer at the bottom of this page. We did not put it in the library, because it
+          belongs to the site rather than to the collection — and a library that sells its own
+          footer is just a website with a download button.
+        </p>
+
+        <p className="mt-4 max-w-xl text-pretty text-muted-foreground">
+          Browse the library for the ones you can paste.
         </p>
 
         <Link

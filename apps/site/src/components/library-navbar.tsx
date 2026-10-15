@@ -14,11 +14,16 @@ import { ThemeToggle } from "@/components/theme-toggle";
  * and because ⌘K needs a global shortcut, which a control scoped to a panel
  * cannot honestly own.
  *
- * This is the browse page's only bar, and it stays sticky because on a long
- * list the search field is the control you want to reach without scrolling back
- * to the top. It is not the site's header — no tagline, no marketing nav — but
- * it does carry the wordmark and the theme toggle, because a page you cannot
- * get back to the front door from, or cannot read in light, is a dead end.
+ * This is the browse page's only bar, and it scrolls away with the page like
+ * every other piece of chrome on this site. It was sticky, on the theory that
+ * on a long list the search field should always be reachable — but the sidebar
+ * already keeps every footer one click away, so the bar was pinning itself to
+ * the viewport to protect a control nobody has to reach. ⌘K still works
+ * scrolled out of view: focusing the field scrolls it back.
+ *
+ * It is not the site's header — no tagline, no marketing nav — but it does
+ * carry the wordmark and the theme toggle, because a page you cannot get back
+ * to the front door from, or cannot read in light, is a dead end.
  *
  * The shortcut focuses the field rather than opening a palette. With a library
  * this size a palette is ceremony; a focused input with the list already
@@ -49,7 +54,7 @@ export function LibraryNavbar({
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur">
+    <header className="border-b border-border">
       <div className="mx-auto flex h-14 w-full max-w-400 items-center gap-4 px-6 sm:px-8">
         <Link
           href="/"
