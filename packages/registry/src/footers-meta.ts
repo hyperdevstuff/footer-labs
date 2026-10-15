@@ -49,6 +49,17 @@ export const FOOTERS: readonly FooterMetaEntry[] = [
           description: "Merged onto the <footer> element, after the footer's own classes.",
         },
       ],
+      knobs: [
+        {
+          kind: "range",
+          prop: "hue",
+          label: "Accent hue",
+          min: 0,
+          max: 360,
+          step: 1,
+          default: 24,
+        },
+      ],
       reducedMotion: "Nothing animates. There is nothing to degrade.",
       a11y: "Real <footer> and <nav> landmarks, labelled navigation, real links, visible focus rings with a background offset so they survive on the hairline borders.",
     },

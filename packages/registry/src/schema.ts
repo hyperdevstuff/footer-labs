@@ -24,6 +24,45 @@ export type Category =
 export type Status = "stable" | "experimental";
 
 /**
+ * One tunable surface of a footer, declared in metadata so the `/create`
+ * studio can build its controls without knowing anything about the footer.
+ * Knobs drive the footer's *props*: the value on the slider and the value in
+ * the copied code are the same variable.
+ */
+export type KnobDef =
+  | {
+      readonly kind: "select";
+      /** CamelCase prop name passed to the footer component. */
+      readonly prop: string;
+      readonly label: string;
+      readonly options: readonly string[];
+      readonly default: string;
+    }
+  | {
+      readonly kind: "text";
+      readonly prop: string;
+      readonly label: string;
+      readonly default: string;
+    }
+  | {
+      readonly kind: "range";
+      readonly prop: string;
+      readonly label: string;
+      readonly min: number;
+      readonly max: number;
+      readonly step: number;
+      readonly default: number;
+    }
+  | {
+      readonly kind: "image";
+      readonly prop: string;
+      readonly label: string;
+      readonly default?: string;
+      /** Site-relative preview URLs. Never shipped in the copied source. */
+      readonly presets?: readonly string[];
+    };
+
+/**
  * A technique study credits the source of a *technique* — the easing curve,
  * the masking approach, the type scale. Never the design, layout or copy.
  */
@@ -53,6 +92,8 @@ export type FooterMeta = {
   readonly reducedMotion: string;
   /** Honest statement of known accessibility limits. */
   readonly a11y: string;
+  /** Tunable props, rendered as controls by the `/create` studio. */
+  readonly knobs?: readonly KnobDef[];
   /** Rules this footer deliberately breaks. Only allowed on `experimental`. */
   readonly deviations?: readonly string[];
   /** Remote assets the *preview* uses. Never required by the copied code. */
@@ -191,6 +232,75 @@ export function validateRegistryItem(item: unknown): string[] {
     }
     if (typeof credit.technique !== "string" || credit.technique.length === 0) {
       at("meta.credit.technique", "is required — describe the technique, not the design");
+    }
+  }
+
+  const knobs = meta.knobs;
+  if (knobs !== undefined) {
+    if (!Array.isArray(knobs)) {
+      at("meta.knobs", "must be an array when present");
+    } else {
+      const seen = new Set<string>();
+      for (const [index, knob] of knobs.entries()) {
+        const k = knob as Record<string, unknown>;
+        const path = `meta.knobs[${index}]`;
+
+        if (typeof k.prop !== "string" || !/^[a-z][A-Za-z0-9]*$/.test(k.prop)) {
+          at(`${path}.prop`, `"${String(k.prop)}" must be a camelCase prop name`);
+        } else if (seen.has(k.prop)) {
+          at(`${path}.prop`, `"${k.prop}" is declared more than once`);
+        } else {
+          seen.add(k.prop);
+        }
+
+        if (typeof k.label !== "string" || k.label.length === 0) {
+          at(`${path}.label`, "is required");
+        }
+
+        switch (k.kind) {
+          case "select": {
+            if (!Array.isArray(k.options) || k.options.length === 0) {
+              at(`${path}.options`, "must be a non-empty array");
+            } else if (!k.options.includes(k.default as string)) {
+              at(`${path}.default`, `"${String(k.default)}" is not one of ${k.options.join(", ")}`);
+            }
+            break;
+          }
+          case "text": {
+            if (typeof k.default !== "string") at(`${path}.default`, "must be a string");
+            break;
+          }
+          case "range": {
+            const { min, max, step, default: value } = k as Record<string, unknown>;
+            if (typeof min !== "number" || typeof max !== "number" || min >= max) {
+              at(`${path}`, "needs a numeric min and max with min < max");
+            } else if (typeof step !== "number" || step <= 0) {
+              at(`${path}.step`, "must be a positive number");
+            } else if (
+              typeof value !== "number" ||
+              value < (min as number) ||
+              value > (max as number)
+            ) {
+              at(`${path}.default`, "must lie within min and max");
+            }
+            break;
+          }
+          case "image": {
+            if (k.default !== undefined && typeof k.default !== "string") {
+              at(`${path}.default`, "must be a string URL when present");
+            }
+            if (
+              k.presets !== undefined &&
+              (!Array.isArray(k.presets) || k.presets.some((p) => typeof p !== "string"))
+            ) {
+              at(`${path}.presets`, "must be an array of strings when present");
+            }
+            break;
+          }
+          default:
+            at(`${path}.kind`, `"${String(k.kind)}" is not a known knob kind`);
+        }
+      }
     }
   }
 

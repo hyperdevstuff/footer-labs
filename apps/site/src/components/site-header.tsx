@@ -2,7 +2,10 @@
 
 import { ThemeToggle } from "@/components/theme-toggle";
 
-const NAV = [{ href: "/blocks", label: "Blocks" }] as const;
+const NAV = [
+  { href: "/blocks", label: "Blocks" },
+  { href: "/create", label: "Create" },
+] as const;
 
 /**
  * The landing page's header.
@@ -42,7 +45,6 @@ export function SiteHeader() {
             footer-labs
           </span>
         </Link>
-
         <nav aria-label="Main" className="ml-auto flex items-center gap-1">
           {NAV.map((item) => (
             <Link
