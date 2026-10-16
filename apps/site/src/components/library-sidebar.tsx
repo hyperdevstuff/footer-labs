@@ -1,23 +1,32 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronDown, Search } from "lucide-react";
 import Link from "next/link";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 
 /**
  * Library sidebar.
  *
- * Navigation and nothing else. Categories are collapsible groups and footers
- * are direct links inside them, so every footer is one click from anywhere on
- * the page — the old facet sidebar made filtering the primary verb and put the
+ * The chrome for the browse index AND the showcase, unchanged between them.
+ * It used to be two things: a wordmark here and a navbar there, at three
+ * different column widths, so moving between the two pages rearranged the
+ * room. There is one sidebar and both pages mount it.
+ *
+ * Navigation and nothing else. Categories are collapsible groups and footers are
+ * direct links inside them, so every footer is one click from anywhere on the
+ * page — the old facet sidebar made filtering the primary verb and put the
  * footer two clicks and a card away.
  *
- * Search does NOT live here. It filters the whole library, so it sits in the
- * navbar with a global ⌘K, and arrives here as a prop.
+ * Search lives here now rather than in a bar above. It filters the whole
+ * library, but so does everything else in this column, and the bar it needed was
+ * a whole row of viewport spent on one input. ⌘K still works from anywhere on
+ * the page — the listener is global either way, so moving the field into a
+ * panel cost the shortcut nothing.
  *
- * Three decisions worth stating because they are not obvious:
+ * Four decisions worth stating because they are not obvious:
  *
  *   - Closed groups are `hidden`, not height-0. A collapsed group must leave
  *     the tab order, or a keyboard user tabs into links they cannot see.
@@ -26,6 +35,9 @@ import { cn } from "@/lib/utils";
  *     structure does not move under the pointer.
  *   - The active footer is marked with `aria-current="page"`. A background
  *     colour alone tells a screen reader nothing.
+ *   - An empty category says "coming soon", not "nothing here yet". Both are
+ *     true; only one of them reads as a plan rather than a gap. The structure
+ *     is the roadmap, and a roadmap is not an apology.
  */
 
 export type SidebarFooter = {
@@ -55,12 +67,13 @@ function matches(footer: SidebarFooter, query: string) {
 
 /** Tier as a filled dot — three tiers, always the same shape, so a column of
  *  them reads as a value scale rather than thirty competing badges. */
-function TierDot({ tier }: { tier: string }) {
+export function TierDot({ tier, className }: { tier: string; className?: string }) {
   return (
     <span
       aria-hidden
       className={cn(
-        "size-1.5 shrink-0 rounded-full",
+        "shrink-0 rounded-full",
+        className ?? "size-1.5",
         tier === "css"
           ? "bg-foreground"
           : tier === "motion"
@@ -76,26 +89,31 @@ export function LibrarySidebar({
   footers,
   active,
   query,
-  showWordmark = true,
+  onQueryChange,
 }: {
   categories: readonly SidebarCategory[];
   footers: readonly SidebarFooter[];
+  /** Set on the showcase page. Undefined on the browse index. */
   active?: string;
   query: string;
-  /**
-   * Whether to render the wordmark at the top.
-   *
-   * The showcase page (`/footers/[name]`) has no navbar, so the sidebar's
-   * wordmark is the only way home and it must stay. The browse page
-   * (`/blocks`) has a navbar that already carries it, and rendering both puts
-   * the same two words on screen forty pixels apart — which reads as a
-   * rendering bug, not as navigation.
-   */
-  showWordmark?: boolean;
+  onQueryChange: (value: string) => void;
 }) {
   // Populated groups open by default. `undefined` means "not yet touched",
   // which is what lets a category added later arrive open rather than closed.
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const input = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const onKey = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        input.current?.focus();
+        input.current?.select();
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
 
   const grouped = useMemo(
     () =>
@@ -115,29 +133,47 @@ export function LibrarySidebar({
     <div className="flex h-full flex-col">
       {/* The wordmark. The mark is the footer's own top-edge ornament reduced
           to a glyph — a hairline square with the accent rule across its foot.
-          Hidden on /blocks, where the navbar already shows it — and so is the
-          rule under it, which would otherwise stack a second hairline directly
-          on top of the navbar's own border-b. */}
-      {showWordmark ? (
-        <>
-          <div className="shrink-0 pb-4">
-            <Link
-              href="/"
-              className="flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-            >
-              <span
-                aria-hidden
-                className="fl-mark h-6 w-6 shrink-0 rounded-md border border-border bg-foreground"
-              />
-              <span className="font-display text-base leading-none font-medium tracking-tight">
-                footer-labs
-              </span>
-            </Link>
-          </div>
+          One definition of the shape lives in globals.css as `fl-mark`. */}
+      <div className="shrink-0 pb-4">
+        <Link
+          href="/"
+          className="flex items-center gap-3 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          <span
+            aria-hidden
+            className="fl-mark h-6 w-6 shrink-0 rounded-md border border-border bg-foreground"
+          />
+          <span className="font-display text-base leading-none font-medium tracking-tight">
+            footer-labs
+          </span>
+        </Link>
+      </div>
 
-          <div className="shrink-0 border-t border-border" />
-        </>
-      ) : null}
+      <div className="shrink-0 border-t border-border" />
+
+      {/* Search, directly under the rule it shares a page with. The shortcut
+          focuses the field rather than opening a palette: with a library this
+          size a palette is ceremony, and a focused input with the list already
+          filtered underneath it is the same job in one control. */}
+      <div className="relative mt-3 shrink-0">
+        <Search
+          aria-hidden
+          className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground"
+        />
+        <input
+          ref={input}
+          type="search"
+          value={query}
+          onChange={(event) => onQueryChange(event.target.value)}
+          placeholder="Search"
+          aria-label="Search footers"
+          aria-describedby="fl-search-count"
+          className="h-8 w-full rounded-md border border-border bg-transparent pr-11 pl-8 text-sm placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        />
+        <kbd className="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-border px-1 py-0.5 font-mono text-xs leading-none text-muted-foreground">
+          ⌘K
+        </kbd>
+      </div>
 
       <nav aria-label="Footers" className="mt-3 flex-1 overflow-y-auto pr-1">
         {grouped.length === 0 ? (
@@ -159,7 +195,7 @@ export function LibrarySidebar({
               }
             >
               {group.items.map((footer) => (
-                <BlockLink key={footer.name} footer={footer} active={footer.name === active} />
+                <FooterLink key={footer.name} footer={footer} active={footer.name === active} />
               ))}
             </CategoryGroup>
           ))
@@ -173,14 +209,78 @@ export function LibrarySidebar({
         </p>
 
         {/* Credits lives in the footer of the site, not in its navbar. This is
-            where the browse page keeps a route to it, so removing the link
-            from the chrome above did not strand the page. */}
+            where the library keeps a route to it, so removing the link from the
+            chrome above did not strand the page. */}
         <Link
           href="/credits"
           className="mt-2 block rounded-md px-2 py-1 text-sm text-muted-foreground transition-colors duration-150 hover:bg-secondary/50 hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
         >
           Credits
         </Link>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The sidebar column.
+ *
+ * The `<aside>` and its full-height sticky inner, shared by the browse index
+ * and the showcase. It was written out separately on each page and the two
+ * drifted: the showcase had `sticky top-0 h-dvh` with its own `px-5 py-6` and
+ * no divider, while the browse index wrapped the sidebar in a bare `<div>`
+ * inside the page's `max-w-400 px-6 sm:px-8` grid. Same component, four
+ * visible differences — the column sat at a different x-offset, started at a
+ * different height, and scrolled away with the page on one route and not the
+ * other.
+ *
+ * This is the showcase's version, because it is the correct one: a sidebar that
+ * pins and keeps its own scroll stays put while a long footer list is read,
+ * and owning its padding means it does not inherit whatever measure the page
+ * around it happens to use.
+ *
+ * The divider is on the `<aside>` as a negative-margin rule rather than as
+ * padding on the column beside it, so it draws at the viewport edge instead of
+ * 1.5rem inside the content column.
+ */
+export function SidebarColumn({ children }: { children: React.ReactNode }) {
+  return (
+    <aside className="relative hidden lg:block">
+      {/* Pinned, full height, scrolls independently. `h-dvh` rather than
+          `h-screen` — 100vh jumps on mobile, and this is sticky chrome the
+          reader will have on screen while the browser chrome hides. */}
+      <div className="sticky top-0 flex h-dvh flex-col overflow-y-auto px-5 py-6">{children}</div>
+
+      {/* The one hairline between the column and the content. */}
+      <div aria-hidden className="absolute inset-y-0 -right-px w-px bg-border" />
+    </aside>
+  );
+}
+
+/**
+ * The mobile top bar.
+ *
+ * The sidebar is `hidden lg:block`, so below `lg` this is the only chrome on
+ * either page. Without it, a phone visitor on the showcase has no way home and
+ * no way to change theme — the sidebar carries the wordmark link and the toggle,
+ * and neither of those exists at that width. It is two controls, not a navbar:
+ * search stays in the sidebar and is simply unreachable below `lg`, which is
+ * the same trade the sidebar already makes for navigation.
+ */
+export function MobileBar() {
+  return (
+    <div className="flex items-center gap-3 border-b border-border px-6 py-3 lg:hidden">
+      <Link
+        href="/"
+        className="flex items-center gap-2.5 rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      >
+        <span aria-hidden className="fl-mark h-5 w-5 shrink-0 rounded-xs bg-foreground" />
+        <span className="font-display text-base leading-none font-medium tracking-tight">
+          footer-labs
+        </span>
+      </Link>
+      <div className="ml-auto">
+        <ThemeToggle />
       </div>
     </div>
   );
@@ -231,7 +331,7 @@ function CategoryGroup({
 
       <ul id={panelId} hidden={!open} className="mt-0.5 flex flex-col gap-0.5">
         {count === 0 ? (
-          <li className="py-1 pr-2 pl-8 text-xs text-muted-foreground/50">nothing here yet</li>
+          <li className="py-1 pr-2 pl-8 text-xs text-muted-foreground/50">coming soon</li>
         ) : (
           children
         )}
@@ -240,7 +340,7 @@ function CategoryGroup({
   );
 }
 
-function BlockLink({ footer, active }: { footer: SidebarFooter; active: boolean }) {
+function FooterLink({ footer, active }: { footer: SidebarFooter; active: boolean }) {
   return (
     <li>
       <Link

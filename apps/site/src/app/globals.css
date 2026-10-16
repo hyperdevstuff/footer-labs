@@ -155,11 +155,6 @@
   grid-template-columns: 2.5rem minmax(0, 1fr) 3rem;
 }
 
-/* Browse index: sidebar, then content. */
-@utility grid-library {
-  grid-template-columns: 17rem minmax(0, 1fr);
-}
-
 /*
  * The mark.
  *

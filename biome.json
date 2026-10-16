@@ -13,7 +13,9 @@
       "!**/dist/**",
       "!**/out/**",
       "!**/src/generated/**",
-      "!apps/site/public/r/**"
+      "!apps/site/public/r/**",
+      "!.agents/**",
+      "!.taste-skill/**"
     ]
   },
   "css": {

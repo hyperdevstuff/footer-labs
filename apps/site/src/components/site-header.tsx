@@ -1,16 +1,16 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV = [
-  { href: "/blocks", label: "Blocks" },
+  { href: "/footers", label: "Footers" },
   { href: "/create", label: "Create" },
 ] as const;
 
 /**
  * The landing page's header.
  *
- * Deliberately the same bar as the one on `/blocks`: mark, wordmark, two
+ * Deliberately the same bar as the one on `/footers`: mark, wordmark, two
  * links, theme toggle. It looked like two different sites when the landing
  * page had its own animated variant, and "same navbar everywhere" is worth
  * more than a navbar that performs.

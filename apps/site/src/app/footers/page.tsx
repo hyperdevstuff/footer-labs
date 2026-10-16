@@ -24,21 +24,28 @@ const CATEGORY_LABELS: Record<string, string> = {
 /**
  * Browse index.
  *
+ * Was `/blocks`, which is shadcn's vocabulary for a registry item, not ours.
+ * Everything else on the site — the heading, the nav landmark, the search
+ * placeholder, the install path — already said "footer", so the URL was the
+ * last place still speaking another language. Renamed before the site was ever
+ * deployed, which means no redirect and no inbound links to break.
+ *
  * Categories are collapsible groups in the sidebar and footers are direct links
  * inside them, so every footer is one click away. The earlier version made
  * Category/Tier/Status facet filters the primary verb, which meant picking a
  * filter first and then finding the footer — two decisions where one would do,
  * and a page that could not be read as a list of what the library contains.
  *
- * Search lives in the navbar with ⌘K because it filters the whole library, not
- * the sidebar's column. It arrives here as a prop.
+ * Search lives in the sidebar with ⌘K. It used to live in a navbar above the
+ * page, which meant this route and the showcase showed the same column at two
+ * different widths with the wordmark on one and not the other.
  *
  * Every declared category is listed even when it is empty, with a real count.
  * The structure is the roadmap: a visitor can see that `isometric` exists and
  * that nothing is in it yet, which is more honest than a sidebar that silently
  * re-lays-out every time a footer is added.
  */
-export default function BlocksPage() {
+export default function FootersPage() {
   const categories: readonly SidebarCategory[] = CATEGORIES.map((id) => ({
     id,
     label: CATEGORY_LABELS[id] ?? id,

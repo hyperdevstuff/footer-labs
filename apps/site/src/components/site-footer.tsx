@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 /**
@@ -34,7 +34,7 @@ export function SiteFooter() {
         </p>
 
         <Link
-          href="/blocks"
+          href="/footers"
           className="group mt-8 inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-medium text-background transition-transform duration-150 ease-out active:scale-press focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
         >
           Browse the library
@@ -51,10 +51,10 @@ export function SiteFooter() {
 
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
             <Link
-              href="/blocks"
+              href="/footers"
               className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
             >
-              Blocks
+              Footers
             </Link>
             <Link
               href="/credits"

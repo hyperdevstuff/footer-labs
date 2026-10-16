@@ -82,7 +82,7 @@ function Hero() {
 
       <div className="enter enter-4 mt-10 flex flex-wrap items-center gap-3">
         <Link
-          href="/blocks"
+          href="/footers"
           className="group inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-5 text-sm font-medium text-background transition-transform duration-150 ease-out active:scale-press focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
         >
           Browse the library
@@ -144,33 +144,51 @@ function Categories() {
         <ul>
           {CATEGORIES.map((id, index) => {
             const count = counts.get(id) ?? 0;
+            const content = (
+              <>
+                <span className="font-mono text-xs text-muted-foreground tabular-nums">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-display text-lg tracking-tight">
+                    {CATEGORY_LABELS[id] ?? id}
+                  </span>
+                  <span className="mt-1 block text-pretty text-sm text-muted-foreground">
+                    {CATEGORY_BLURBS[id] ?? ""}
+                  </span>
+                </span>
+                <span
+                  className={
+                    count === 0
+                      ? "text-right font-mono text-sm text-muted-foreground/40 tabular-nums"
+                      : "text-right font-mono text-sm tabular-nums"
+                  }
+                >
+                  {count}
+                </span>
+              </>
+            );
+
+            /* An empty category is not a link.
+
+               These rows pointed at `?category=<id>`, and the browse page has not
+               read a search param since the facet sidebar was replaced — every
+               one of them landed on the same unfiltered index. Seven of the eight
+               are still empty, so seven of eight rows were a link that went
+               nowhere. The ones with a footer in them link to the library; the
+               rest are content, and look like it. */
             return (
               <li key={id} className="border-b border-border">
-                <Link
-                  href={`/blocks?category=${id}`}
-                  className="grid grid-category items-baseline gap-4 py-5 transition-colors duration-150 hover:bg-secondary/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-                >
-                  <span className="font-mono text-xs text-muted-foreground tabular-nums">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-display text-lg tracking-tight">
-                      {CATEGORY_LABELS[id] ?? id}
-                    </span>
-                    <span className="mt-1 block text-pretty text-sm text-muted-foreground">
-                      {CATEGORY_BLURBS[id] ?? ""}
-                    </span>
-                  </span>
-                  <span
-                    className={
-                      count === 0
-                        ? "text-right font-mono text-sm text-muted-foreground/40 tabular-nums"
-                        : "text-right font-mono text-sm tabular-nums"
-                    }
+                {count > 0 ? (
+                  <Link
+                    href="/footers"
+                    className="grid grid-category items-baseline gap-4 py-5 transition-colors duration-150 hover:bg-secondary/40 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
                   >
-                    {count}
-                  </span>
-                </Link>
+                    {content}
+                  </Link>
+                ) : (
+                  <div className="grid grid-category items-baseline gap-4 py-5">{content}</div>
+                )}
               </li>
             );
           })}

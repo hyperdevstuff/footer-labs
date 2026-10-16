@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useRef, useState } from "react";
 import {
@@ -18,7 +18,7 @@ import { OpenInMenu } from "./open-in-menu";
 import type { FooterProp } from "@footer-labs/registry/schema";
 
 /**
- * Block showcase.
+ * Footer showcase.
  *
  *   name  →  preview  →  install  →  props
  *
@@ -28,9 +28,13 @@ import type { FooterProp } from "@footer-labs/registry/schema";
  * The content column is deliberately left-biased and width-capped so the right
  * side stays empty. That whitespace is what lets thirty loud footers sit next
  * to quiet chrome.
+ *
+ * The rendered component is `preview`, not `footer`. The prop is `footer`, and
+ * `footer.footer` was the alternative — a word that means two different things
+ * on the same line.
  */
 
-export type BlockData = {
+export type FooterData = {
   name: string;
   title: string;
   description: string;
@@ -38,7 +42,7 @@ export type BlockData = {
   tier: string;
   category: string;
   props: readonly FooterProp[];
-  footer: React.ReactNode;
+  preview: React.ReactNode;
 };
 
 const VIEWPORTS = [
@@ -49,7 +53,7 @@ const VIEWPORTS = [
 
 type ViewportId = (typeof VIEWPORTS)[number]["id"];
 
-export function Showcase({ block }: { block: BlockData }) {
+export function Showcase({ footer }: { footer: FooterData }) {
   const [pm, setPm] = useState<Pm>("pnpm");
   const [viewport, setViewport] = useState<ViewportId>("desktop");
   const [restartKey, setRestartKey] = useState(0);
@@ -82,17 +86,17 @@ export function Showcase({ block }: { block: BlockData }) {
   }, [showCode]);
 
   const width = VIEWPORTS.find((v) => v.id === viewport)?.width ?? "max-w-6xl";
-  const prompt = buildPrompt(block);
+  const prompt = buildPrompt(footer);
 
   return (
     <div className="px-6 py-10 sm:px-10">
       <div className="max-w-3xl">
         {/* 1 · Name */}
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-          <h1 className="font-display text-3xl tracking-tight">{block.title}</h1>
-          <span className="font-mono text-xs text-muted-foreground">{block.name}</span>
+          <h1 className="font-display text-3xl tracking-tight">{footer.title}</h1>
+          <span className="font-mono text-xs text-muted-foreground">{footer.name}</span>
         </div>
-        <p className="mt-3 text-pretty text-muted-foreground">{block.description}</p>
+        <p className="mt-3 text-pretty text-muted-foreground">{footer.description}</p>
       </div>
 
       {/*
@@ -166,7 +170,7 @@ export function Showcase({ block }: { block: BlockData }) {
                     the preview's own toolbar. They were down in the caption row
                     below, which read as a footnote and got skipped. */}
               <a
-                href={`/preview/${block.name}`}
+                href={`/preview/${footer.name}`}
                 className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-3 text-xs font-medium transition-colors hover:bg-secondary focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <Maximize2 aria-hidden className="size-3.5" />
@@ -197,10 +201,10 @@ export function Showcase({ block }: { block: BlockData }) {
 
           <div className="flex min-h-canvas justify-center overflow-hidden bg-muted/30 p-4">
             <div
-              key={`${block.name}-${restartKey}`}
+              key={`${footer.name}-${restartKey}`}
               className={`w-full overflow-hidden rounded-lg border border-border shadow-sm ${width}`}
             >
-              <DemoContext>{block.footer}</DemoContext>
+              <DemoContext>{footer.preview}</DemoContext>
             </div>
           </div>
         </div>
@@ -208,7 +212,7 @@ export function Showcase({ block }: { block: BlockData }) {
         {/* Kept mounted and hidden rather than unmounted, so toggling source
               does not throw away the scroll position inside the panel. */}
         <div id="fl-source" ref={sourcePanel} hidden={!showCode} className="mt-4 scroll-mt-6">
-          <CodePanel source={block.source} />
+          <CodePanel source={footer.source} />
         </div>
       </div>
 
@@ -224,18 +228,18 @@ export function Showcase({ block }: { block: BlockData }) {
             <PmTabs value={pm} onChange={setPm} />
           </div>
           <div className="mt-3">
-            <CommandLine command={installCommand(pm, block.name)} />
+            <CommandLine command={installCommand(pm, footer.name)} />
           </div>
         </div>
 
         {/* 4 · Props */}
-        {block.props.length > 0 ? (
+        {footer.props.length > 0 ? (
           <div className="mt-10">
             <h2 className="text-xs font-medium tracking-widest text-muted-foreground uppercase">
               Props
             </h2>
             <dl className="mt-3 divide-y divide-border">
-              {block.props.map((prop) => (
+              {footer.props.map((prop) => (
                 <div key={prop.name} className="grid gap-1 py-3 sm:grid-props">
                   <dt className="font-mono text-xs">
                     {prop.name}
@@ -257,22 +261,22 @@ export function Showcase({ block }: { block: BlockData }) {
   );
 }
 
-function buildPrompt(block: BlockData): string {
-  const pascal = block.name
+function buildPrompt(footer: FooterData): string {
+  const pascal = footer.name
     .split("-")
     .map((p) => (p[0] ?? "").toUpperCase() + p.slice(1))
     .join("");
 
   return [
-    `Add the footer-labs block "${block.name}" to my project.`,
+    `Add the footer-labs footer "${footer.name}" to my project.`,
     ``,
     `Install it with the shadcn CLI:`,
-    `  npx shadcn@latest add @footer-labs/${block.name}`,
+    `  npx shadcn@latest add @footer-labs/${footer.name}`,
     ``,
     `Then render it as the last element of the page:`,
-    `  import { ${pascal} } from "@/components/footer-${block.name}"`,
+    `  import { ${pascal} } from "@/components/footer-${footer.name}"`,
     ``,
-    `What it is: ${block.description}`,
+    `What it is: ${footer.description}`,
     ``,
     `- One self-contained file, no dependencies.`,
     `- Structural colour uses shadcn semantic tokens, so it inherits your theme.`,
