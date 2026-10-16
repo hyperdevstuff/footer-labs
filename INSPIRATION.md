@@ -48,16 +48,26 @@ What is worth studying:
   material rather than restating the brand in words. Directly relevant to the
   `generative` category, where we are reaching for texture instead of stock
   photography.
-- **A second, tiny legal row.** `privacy · terms · dpa · subprocessors` floating
-  below the main footer, well separated. A useful pattern for footers that need
-  a real legal surface without bloating the primary one.
 - **They run their own shader library** at [shaders.paper.design](https://shaders.paper.design).
   Worth a look for the `webgl` tier, and worth checking alongside
   [shaders.com](https://shaders.com) — two independent implementations of the
   same idea is a useful signal.
 
-Credits owed: none yet. Candidate techniques for a `generative` or `editorial`
-footer.
+> **Corrected 2026-10-15** after reading the shipped markup. Two things here
+> were wrong:
+>
+> - The legal links are **not** "a second, tiny legal row floating below the
+>   main footer". `privacy · terms · dpa · subprocessors` is a **fourth
+>   column** with its own `h4` heading, in the same row and at the same size as
+>   everything else. The separate small row is `© 2026` plus a contact button.
+> - The contact address is a **button with a hidden twin span that slides** on
+>   hover (`visibility:hidden` span under an absolutely positioned twin). It
+>   reads as a plain address but behaves like a control. Needs client JS, so we
+>   cannot take it — see [CREDITS.md](./CREDITS.md).
+
+Credits owed: **one technique landed** — legal as a peer column, taken for
+`colophon`. The texture idea is still open and is the strongest candidate for a
+footer whose subject actually prints something.
 
 ---
 
@@ -67,11 +77,11 @@ Nous Research's agent product. MIT licensed.
 
 What is worth studying:
 
-- **Grouped columns with a two-level header.** Each column has a small caps
-  group label (`Research`, `Products`, `Resources`) with the sub-brand beneath
-  it in italic (`Nous`, `Hermes`, `Community`). It reads like a table of
-  contents for a company rather than a list of links, and it scales to a
-  genuinely deep site without turning into a wall.
+- **Grouped columns with a two-level header.** Each column has a quiet group
+  label (`Research`, `Products`, `Resources`) with the sub-brand beneath it set
+  **larger in the display face** (`Nous`, `Hermes`, `Community`). It reads like
+  a table of contents for a company rather than a list of links, and it scales
+  to a genuinely deep site without turning into a wall.
 - **The licence as a first-class element.** `MIT License · 2026` is set as
   visible content, not buried. For an open-source product it is the most
   important line in the footer and it gets treated as such. This is the exact
@@ -85,8 +95,22 @@ What is worth studying:
   `Platform` group). It is either very deliberate or a build artefact — worth
   deciding which before copying anything.
 
-Credits owed: none yet. Candidate techniques for an `editorial` footer, and
-specifically for how a footer handles a genuinely deep link structure.
+> **Corrected 2026-10-15** after reading the shipped markup. The two-level
+> header is **not** "a small caps label with the sub-brand beneath it in
+> italic". It is a **scale jump**: an `opacity-60` monospace label, then the
+> sub-brand in the display face at question size, normal case, tracking normal.
+> No italics anywhere on the page. The mechanism matters more than the
+> description — *scale*, not *style*, is what produces the hierarchy, and it is
+> the cheaper move.
+>
+> The link hover is also not an underline. Every link is a **chip that
+> inverts** — `group-hover:bg-[fg] group-hover:text-[primary]
+> group-hover:duration-0`, with a negative row margin so a column's links butt
+> into one continuous block. This is the most transferable thing here.
+
+Credits owed: **three techniques landed** for `colophon` — the scale-jump
+header, the inverting chip, and the licence as a peer of the terms. Full detail
+in [CREDITS.md](./CREDITS.md).
 
 ---
 
